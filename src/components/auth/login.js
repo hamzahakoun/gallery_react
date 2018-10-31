@@ -1,8 +1,9 @@
 import React , { Component } from 'react' ;
 import { request } from '../../utils/http' ;
 import { connect } from 'react-redux' ;
-import { login } from '../../store/actions/authActions' ;
+import { login,hideLoginErrorMessage } from '../../store/actions/authActions' ;
 import { Redirect } from 'react-router-dom' ;
+import Message from '../utils/message' ;
 
 import {
   Grid,
@@ -44,10 +45,13 @@ class Login extends Component {
 
   login = () => this.props.login(this.state) ;
 
+  hideLoginErrorMessage = () => this.props.hideLoginErrorMessage()  ;
+
+
   render = () => {
 
-    const { isUserAuthorized } = this.props ;
-    const token = localStorage.getItem('token') ; // if user filled the url manually 
+    const { isUserAuthorized,authError } = this.props ;
+    const token = localStorage.getItem('token') ; // if user filled the url manually
     if (isUserAuthorized || token) {
       return <Redirect to = '/' />
     }
@@ -103,6 +107,11 @@ class Login extends Component {
 
         </Grid></div>
 
+      <Message
+        open = {this.props.authError}
+        handleClose  = {this.hideLoginErrorMessage}
+        message = {this.props.authError}
+      />
       </div>
 
     )
@@ -112,12 +121,15 @@ class Login extends Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     login : (credentials) => dispatch(login(credentials)) ,
+    hideLoginErrorMessage : () => dispatch(hideLoginErrorMessage())
   }
 }
 
 const mapStateToProps = (state) => {
   return {
     isUserAuthorized : state.auth.isUserAuthorized ,
+    authError : state.auth.authError,
   }
 }
+
 export default connect(mapStateToProps,mapDispatchToProps)(Login) ;

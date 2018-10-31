@@ -16,6 +16,15 @@ const login = (credentials) => {
   }
 }
 
+
+
+const hideLoginErrorMessage = () => {
+
+  return (dispatch,getState) => {
+    dispatch({type :'HIDE_LOGIN_ERROR_MESSAGE'})
+  }
+}
 export {
   login ,
+  hideLoginErrorMessage
 }

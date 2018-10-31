@@ -32,10 +32,10 @@ class App extends Component {
 
 
   render() {
-    
+
     return (
       <div className="App">
-        <Navbar />
+  
         { !this.state.verifyStatus && <CircularProgress color="secondary" className = 'loading'/> }
         { this.state.verifyStatus &&
           <BrowserRouter>

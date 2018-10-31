@@ -7,8 +7,11 @@ const authReducer = (state = initState, action) => {
       return {...state,authError : action.message,isUserAuthorized : false }
 
     case 'LOGIN_SUCCESS' :
-      localStorage.setItem('token',action.token) ; 
+      localStorage.setItem('token',action.token) ;
       return {...state,authError : null,isUserAuthorized : true }
+
+    case 'HIDE_LOGIN_ERROR_MESSAGE' :
+      return {...state,authError : null }
 
     default :
       return state ;

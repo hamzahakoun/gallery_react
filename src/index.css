@@ -12,3 +12,23 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+
+.login-container {
+  text-align: center ;
+  margin-top: 3% ; 
+}
+
+.login-container [class*=MuiFormControl] {
+  margin: 10px ;
+  width: 90% ;
+}
+
+.login-container img {
+  width: 100px;
+  height: 100px;
+
+}
+.login-container button {
+  width: 90% ;
+}
