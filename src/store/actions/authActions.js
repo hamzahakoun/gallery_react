@@ -1,7 +1,7 @@
 import { request } from '../../utils/http' ;
 
 
-const login = (credentials) => {
+const login = (credentials,history) => {
 
   return (dispatch,getState) => {
     request('api-token-auth/',credentials)
@@ -9,7 +9,7 @@ const login = (credentials) => {
       if (resp.status === 400) {
         dispatch({type : 'LOGIN_ERROR',message : "Invalid username/password combination"})
       } else {
-        resp.json().then(data => dispatch({type : "LOGIN_SUCCESS",token : data.token}) )
+        resp.json().then(data => dispatch({type : "LOGIN_SUCCESS",token : data.token}) );
       }
 
     }).catch(e => dispatch({type : 'LOGIN_ERROR',message : e.message}))

@@ -35,7 +35,16 @@ class Login extends Component {
       username : '',
       password : '' ,
     }
+  }
 
+  // when th user login successfuly isUserAuthorized will become true
+  // so i should update the verifyStatus in App.js so the privateRoute
+  //will not redirect me to the login page
+  static getDerivedStateFromProps = (nextProps,prevState) => {
+    if (nextProps.isUserAuthorized === !prevState.isUserAuthorized) {
+      nextProps.updateVerificationStatus(200) ;
+    }
+    return nextProps ;
   }
 
   handleChange = (e) => {
@@ -43,7 +52,9 @@ class Login extends Component {
     this.setState({ [type] : e.target.value })
   }
 
-  login = () => this.props.login(this.state) ;
+  login = () => {
+    this.props.login(this.state) ;
+  }
 
   hideLoginErrorMessage = () => this.props.hideLoginErrorMessage()  ;
 
@@ -52,9 +63,13 @@ class Login extends Component {
 
     const { isUserAuthorized,authError } = this.props ;
     const token = localStorage.getItem('token') ; // if user filled the url manually
+    
+    // this will cause the app to redirect to home page after successful login
+    // and it also works as a protector against redirecting to login page manullay
     if (isUserAuthorized || token) {
       return <Redirect to = '/' />
     }
+
 
     return (
       <div className = 'login-container'>

@@ -34,7 +34,7 @@ export default class Message extends Component {
             open={this.state.open}
             autoHideDuration={6000}
             onClose={this.handleClose}
-            message={<span id="message-id">{this.state.message}</span>}
+            message={this.state.message}
             action={[
              <IconButton
                key="close"

@@ -6,10 +6,8 @@ import PrivateRoute from './components/utils/privateRoute' ;
 import { CircularProgress } from '@material-ui/core' ;
 import Login from './components/auth/login' ;
 
+import { ImagesGrid,Details } from './components' ;
 
-const Test = () => {
-    return <h1>Test</h1>
-}
 
 class App extends Component {
 
@@ -25,6 +23,11 @@ class App extends Component {
 
   }
 
+  // after successful log in i should update the varifyStatus here so
+  // the privateRoute will not redirect me to login page
+  // give this method to Login component
+  updateVerificationStatus = (status) => this.setState({ verifyStatus : status })
+
   componentDidMount = () => {
     const token = localStorage.getItem('token');
     token ? this.verifyToken(token) : this.setState({verifyStatus : 400}) ;
@@ -35,13 +38,14 @@ class App extends Component {
 
     return (
       <div className="App">
-  
+
         { !this.state.verifyStatus && <CircularProgress color="secondary" className = 'loading'/> }
         { this.state.verifyStatus &&
           <BrowserRouter>
             <Switch>
-              <Route path =  '/login' component  = {Login} />
-              <PrivateRoute path = '/' component = {Test} status = {this.state.verifyStatus} />
+              <Route path =  '/login' render = {(props) => <Login {...props} updateVerificationStatus = {this.updateVerificationStatus}/>}  />
+              <PrivateRoute path = '/' component = {ImagesGrid} status = {this.state.verifyStatus} exact = {true} />
+              <PrivateRoute path = '/:id' component = {Details} status = {this.state.verifyStatus} />
             </Switch>
           </BrowserRouter>
 
