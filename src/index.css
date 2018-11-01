@@ -13,10 +13,16 @@ code {
     monospace;
 }
 
+.loading {
+  position: absolute;
+  top : 30%;
+  left : 50% ;
+  transform: translateX(-50%);
+}
 
 .login-container {
   text-align: center ;
-  margin-top: 3% ; 
+  margin-top: 3% ;
 }
 
 .login-container [class*=MuiFormControl] {

@@ -13,11 +13,16 @@ const Navbar = ({ pageName ,history}) => {
   if (!pageName) {
     return (
       <div>
-        <AppBar position="static" color="primary" style = {{marginBottom : '10px'}}>
+        <AppBar position="static" color="primary">
           <Toolbar >
-            <Typography variant="h6" color="inherit">
-              Photos
-            </Typography>
+            <Button color = 'inherit'>Tags</Button>
+            <Button
+              color = 'inherit'
+              onClick = {
+                () => { localStorage.removeItem('token') ; history.push('/login') }
+              }
+
+              >Logout</Button>
           </Toolbar>
         </AppBar>
       </div>

@@ -9,6 +9,9 @@ const galleryReducer = (state = initState, action) => {
     case 'GET_SEARCH' :
       return {...state,searched : action.data}
 
+    case 'GET_LIKED' :
+      return {...state,liked : action.data}
+
     case 'GET_DETAILS' :
       return {...state,details : action.data}
 

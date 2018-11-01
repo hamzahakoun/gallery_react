@@ -3,6 +3,7 @@ import PrivateRouter from './utils/privateRoute' ;
 import Message from './utils/message' ;
 import ImagesGrid from './gallery/imagesGrid' ;
 import Details from './gallery/details' ;
+import Main from './main' ; 
 
 
 export {
@@ -10,5 +11,6 @@ export {
   PrivateRouter,
   Message,
   ImagesGrid,
-  Details
+  Details,
+  Main
 }

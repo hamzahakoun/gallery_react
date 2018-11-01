@@ -14,9 +14,24 @@ const styles = {
 
 class ImagesGrid extends Component {
 
+
+  state = {
+    data : this.props.type ? this.props[this.props.type] : this.props.all ,
+  }
+
   componentDidMount = () => {
-    if (!this.props.data) {
-      this.props.getData('images','GET_ALL') ;
+    if (!this.state.data) {
+
+      switch(this.props.type) {
+
+        case 'liked' :
+          this.props.getData('images?liked=1','GET_LIKED') ;
+          break  ;
+
+        default :
+          this.props.getData('images','GET_ALL') ;
+      }
+
     }
   }
 
@@ -29,7 +44,7 @@ class ImagesGrid extends Component {
     }
 
     const data  = this.props[type] ;
-    
+    console.log(this.props) ;
     return (
       <Grid container spacing = {8} style= {styles.grid}>
         {data &&
