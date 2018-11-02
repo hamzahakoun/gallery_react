@@ -28,8 +28,10 @@ class ImagesGrid extends Component {
           this.props.getData('images?liked=1','GET_LIKED') ;
           break  ;
 
+
         default :
           this.props.getData('images','GET_ALL') ;
+          break
       }
 
     }
@@ -44,7 +46,7 @@ class ImagesGrid extends Component {
     }
 
     const data  = this.props[type] ;
-    console.log(this.props) ;
+  
     return (
       <Grid container spacing = {8} style= {styles.grid}>
         {data &&

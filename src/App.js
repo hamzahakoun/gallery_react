@@ -6,7 +6,7 @@ import PrivateRoute from './components/utils/privateRoute' ;
 import { CircularProgress } from '@material-ui/core' ;
 import Login from './components/auth/login' ;
 
-import { Main,Details } from './components' ;
+import { Main,Details,TagCards } from './components' ;
 
 
 class App extends Component {
@@ -45,6 +45,7 @@ class App extends Component {
             <Switch>
               <Route path =  '/login' render = {(props) => <Login {...props} updateVerificationStatus = {this.updateVerificationStatus}/>}  />
               <PrivateRoute path = '/' component = {Main} status = {this.state.verifyStatus} exact = {true} />
+              <PrivateRoute path = '/tags' component = {TagCards} status = {this.state.verifyStatus} exact = {true} />
               <PrivateRoute path = '/:id' component = {Details} status = {this.state.verifyStatus} />
             </Switch>
           </BrowserRouter>

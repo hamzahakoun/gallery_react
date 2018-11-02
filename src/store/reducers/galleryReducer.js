@@ -1,4 +1,4 @@
-const initState = { all : null,liked : null,searched : null,details : null }
+const initState = { all : null,liked : null,searched : null,details : null,tags : null }
 
 const galleryReducer = (state = initState, action) => {
 
@@ -14,6 +14,12 @@ const galleryReducer = (state = initState, action) => {
 
     case 'GET_DETAILS' :
       return {...state,details : action.data}
+
+    case 'GET_TAGS' :
+      return {...state,tags : action.data}
+
+    case 'CLEAR' :
+      return {all : null ,liked : null,searched : null,details :null,tags : null}
 
     default :
       return state ;
