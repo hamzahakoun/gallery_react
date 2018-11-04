@@ -10,7 +10,12 @@ const styles = {
 const TagItem = ({tagItem,handleClick}) => {
 
   return (
-    <Button style = {styles.tag} variant="contained" color="primary" onClick = {(content) => this.handleClick(content)}>
+    <Button
+      style = {styles.tag}
+      variant="contained"
+      color="primary"
+      onClick = {() => handleClick(tagItem.content)}
+      >
       {tagItem.content}
     </Button>
 

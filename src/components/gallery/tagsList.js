@@ -8,12 +8,12 @@ export default class TagsList extends Component {
     tags :this.props.tags ,
   }
 
-  handleTagItemClick = (content) => this.props.history.push(`/?tags=${content}`)
+  handleTagItemClick = (content) => {this.props.history.push(`/?tags=${content}`)}
 
   render = () => {
     return (
       <div>
-        {this.state.tags.map(item => <TagItem key = {item.id}tagItem = {item} handleClick = {this.handleTagItemClick}/>)}
+        {this.state.tags.map(item => <TagItem key = {item.id} tagItem = {item} handleClick = {this.handleTagItemClick}/>)}
       </div>
     )
   }

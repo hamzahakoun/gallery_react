@@ -19,7 +19,12 @@ class App extends Component {
   verifyToken = (token) => {
 
     request('verify-token/',{token : token})
-    .then(resp => this.setState({verifyStatus : resp.status}))
+    .then(resp => {
+        if (resp.status === 400) {
+          localStorage.removeItem('token') ;
+        }
+       this.setState({verifyStatus : resp.status})
+     })
 
   }
 

@@ -17,9 +17,11 @@ class ImagesGrid extends Component {
 
   state = {
     data : this.props.type ? this.props[this.props.type] : this.props.all ,
+    searchTags : [],
   }
 
   componentDidMount = () => {
+
     if (!this.state.data) {
 
       switch(this.props.type) {
@@ -28,6 +30,8 @@ class ImagesGrid extends Component {
           this.props.getData('images?liked=1','GET_LIKED') ;
           break  ;
 
+        case 'searched' :
+          this.props.getData(`images?tags=${this.props.search.slice(6)}`,'GET_SEARCH')  ;
 
         default :
           this.props.getData('images','GET_ALL') ;
@@ -38,7 +42,9 @@ class ImagesGrid extends Component {
   }
 
 
+
   render = () => {
+    //console.log(this.props.search) ;
     let type = 'all' ;
 
     if (this.props.type) {
@@ -46,7 +52,7 @@ class ImagesGrid extends Component {
     }
 
     const data  = this.props[type] ;
-  
+
     return (
       <Grid container spacing = {8} style= {styles.grid}>
         {data &&
@@ -66,6 +72,7 @@ const mapStateToProps = (state) => {
     all : state.gallery.all ,
     searched : state.gallery.searched ,
     liked : state.gallery.liked ,
+    checkedTags : state.gallery.checkTags
   }
 }
 

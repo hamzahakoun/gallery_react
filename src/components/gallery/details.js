@@ -35,27 +35,32 @@ class Details extends Component {
   getData = () => this.props.getData(`images${this.props.id}`,'GET_DETAILS') ;
 
 
-  // after getting all details get related images ;
-  static getDerivedStateFromProps = (nextProps,prevState) => {
+  render = () => {
 
-    if (nextProps.data) {
-      const { data } = nextProps ;
-      let searchedOnTags = '' ;
-      data.tags.map(item => searchedOnTags += `${item.content}#`) ;
-      searchedOnTags = searchedOnTags.slice(0,searchedOnTags.length -1) ;
-      nextProps.getData(`images?tags=${searchedOnTags}`,'GET_SEARCH') ;
+    const { data } = this.props ;
+    const  {checkedTags} = this.props ;
+
+    let searchTags = '?tags=' ; // for related images
+
+    // send this data to navbar to append it to home page link
+    // so the used will be able to track his requested images when clicking home page link
+    let checked  = ``;
+
+
+    if (data) {
+      searchTags += data.tags[0].content + ',' ;
+      data.tags.slice(1).map(tag => searchTags += `${tag.content},`) ;
     }
 
-    return nextProps ;
-  }
+    if (checkedTags.length) {
+      checked  = `?tags=` ;
+      checkedTags.map(item => checked += `${item.content},`) ;
+    }
 
-
-  render = () => {
-    const { data } = this.props ;
 
     return (
       <div>
-        <Navbar pageName = {'details'} history = {this.props.history}/>
+        <Navbar pageName = {'details'} history = {this.props.history} search = {checked}/>
         { !data && <CircularProgress className = 'loading' color = 'secondary' /> }
         { data &&
           <div>
@@ -81,7 +86,7 @@ class Details extends Component {
 
                     </Grid>
                     <Grid item xs = {12} sm = {8}>
-                      <TagsList tags = {data.tags} />
+                      <TagsList tags = {data.tags} history = {this.props.history} />
                     </Grid>
                   </Grid>
                 </Paper>
@@ -99,11 +104,7 @@ class Details extends Component {
                 </Typography>
               </Grid>
             </Grid>
-
-
-
-
-            <ImagesGrid type = {'searched'}/>
+            <ImagesGrid type = {'searched'} search = {searchTags} />
           </div>
         }
       </div>
@@ -124,6 +125,7 @@ const mapStoreToProps = (state,ownProps) => {
   return {
     id : ownProps.location.pathname.replace('/','') ,
     data : state.gallery.details ,
+    checkedTags  : state.gallery.checkedTags ,
   }
 }
 export default connect(mapStoreToProps,mapDispatchToProps)(Details) ;

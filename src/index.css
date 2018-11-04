@@ -49,6 +49,7 @@ code {
   grid-auto-rows: minmax(50,auto) ;
   grid-gap : 10px;
   padding: 20px 10px ;
+  background-color:#f4f2f2 ; 
 }
 
 
