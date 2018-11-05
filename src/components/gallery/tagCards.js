@@ -1,6 +1,6 @@
 import React , { Component } from 'react' ;
 import { connect } from 'react-redux' ;
-import { getTags, checkTags,clearSearched,} from '../../store/actions/galleryActions' ;
+import { getTags, checkTags,clearData,} from '../../store/actions/galleryActions' ;
 import Navbar from '../layout/navbar' ;
 import  { Search,DeleteForever,ViewComfy } from '@material-ui/icons';
 import {
@@ -9,14 +9,17 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Checkbox,
-  Paper,
   CircularProgress,
   IconButton,
-  Button
+  Button,
+  Typography,
+  Card,
+  CardContent
 } from '@material-ui/core' ;
 import {
   CommentIcon,
 } from '@material-ui/icons' ;
+
 
 const setSpan = (length) => length + 1 ;
 
@@ -79,13 +82,13 @@ class TagCards extends Component {
 
        // cuz if the search is not cleared the it will not get the new data
        // cuz there is data already
-      this.props.clearSearched() ;
+      this.props.clearData('CLEAR_SEARCHED') ;
 
       return
     } else if (!this.state.checked.length && this.props.checkedTags.length) {
       this.props.history.push(`/`) ;
       this.props.checkTags([],'empty') ;
-      this.props.clearSearched() ;
+      this.props.clearData('CLEAR_SEARCHED') ;
     }
     return
 
@@ -122,27 +125,30 @@ class TagCards extends Component {
               Object.keys(this.state.readyTags).map(letter => {
                 const span = setSpan(this.state.readyTags[letter].length)
                 return (
-                  <Paper key = {letter} style = {{ gridRowEnd : `span ${span}`}}>
-                    {
-                      this.state.readyTags[letter].map(item => {
-                        return (
-                          <List key = {item.id}>
-                            <ListItem  role={undefined} dense button onClick={() => this.handleToggle(item)}>
-                               <Checkbox
-                                 checked={this.state.checked.indexOf(item) !== -1}
-                                 tabIndex={-1}
-                                 disableRipple
-                               />
-                             <ListItemText primary={`${item.content}`} />
-                             <ListItemSecondaryAction style = {{marginRight : '10px'}}>{`(${item.img_num})`}</ListItemSecondaryAction>
-                             </ListItem>
-                          </List>
-                        )
-                      })
-                    }
-
-
-                  </Paper>
+                  <Card key = {letter} style = {{ gridRowEnd : `span ${span}`}}>
+                    <CardContent>
+                      <Typography color="textSecondary" gutterBottom style = {{backgroundColor : '#3f51b5',color : '#ffffff',padding : '10px'}}>
+                         {letter.toUpperCase()}
+                       </Typography>
+                      {
+                        this.state.readyTags[letter].map(item => {
+                          return (
+                            <List key = {item.id}>
+                              <ListItem  role={undefined} dense button onClick={() => this.handleToggle(item)}>
+                                 <Checkbox
+                                   checked={this.state.checked.indexOf(item) !== -1}
+                                   tabIndex={-1}
+                                   disableRipple
+                                 />
+                               <ListItemText primary={`${item.content}`} />
+                               <ListItemSecondaryAction style = {{marginRight : '10px'}}>{`(${item.img_num})`}</ListItemSecondaryAction>
+                               </ListItem>
+                            </List>
+                          )
+                        })
+                      }
+                    </CardContent>
+                  </Card>
                 )
               })
             }
@@ -204,7 +210,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getTags : () => dispatch(getTags()) ,
     checkTags : (tags,t) => dispatch(checkTags(tags,t)) ,
-    clearSearched: () => dispatch(clearSearched()),
+    clearData: (type) => dispatch(clearData(type)),
   }
 }
 

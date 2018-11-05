@@ -7,13 +7,13 @@ import {
   Button
 } from '@material-ui/core';
 import { connect } from 'react-redux' ;
-import { clearAll } from '../../store/actions/galleryActions' ;
+import { clearAll,clearData } from '../../store/actions/galleryActions' ;
 
 
 // search refers to the tags the user is searching for
 // so when user clicks home page
 // he will be redirected to the same tags not a new page with all images
-const Navbar = ({ pageName ,history,clear,search}) => {
+const Navbar = ({ pageName ,history,clear,clearData,search}) => {
   // i should always add the ?tags=.... to the link of home page
   // so home page link will be dynmic and thus i can track what the user
   // searching for
@@ -48,7 +48,7 @@ const Navbar = ({ pageName ,history,clear,search}) => {
       <div>
         <AppBar position="static" color="primary" style = {{marginBottom : '10px'}}>
           <Toolbar >
-            <Button color = 'inherit' onClick = {() => history.push(`/${search}`)}>Home</Button>
+            <Button color = 'inherit' onClick = {() => {clearData('CLEAR_DETAILS') ;history.push(`/${search}`)}}>Home</Button>
             <Button
               color = 'inherit'
               onClick = {
@@ -77,6 +77,7 @@ const mapStoreToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     clear : () => dispatch(clearAll) ,
+    clearData : (type) => dispatch(clearData(type))
   }
 }
 

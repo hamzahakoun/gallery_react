@@ -1,7 +1,8 @@
 import React from 'react' ;
 import { Link } from 'react-router-dom' ;
 import { Grid } from '@material-ui/core' ;
-
+import { connect } from 'react-redux' ;
+import { clearData } from '../../store/actions/galleryActions' ;
 
 const styles = {
   img : {
@@ -14,15 +15,19 @@ const styles = {
   }
 }
 
-const ImagesGridItem = ({item}) => {
+const ImagesGridItem = ({item,clearData}) => {
   return (
     <Grid item xs = {6} sm = {3} style = {styles.grid}>
-      <Link to = {`/${item.id}`}>
+      <Link to = {`/${item.id}`} onClick = {() => {clearData("CLEAR_SEARCHED")}}>
         <img src = {item.thumbnail} alt = {item.id} style = {styles.img}/>
       </Link>
     </Grid>
   )
 }
 
-
-export default ImagesGridItem ;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    clearData : (type) => dispatch(clearData(type)) ,
+  }
+}
+export default connect(null,mapDispatchToProps)(ImagesGridItem) ;

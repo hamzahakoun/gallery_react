@@ -37,6 +37,19 @@ const galleryReducer = (state = initState, action) => {
     case 'CLEAR_SEARCHED' : // clear searched imagess
       return {...state,searched : null }
 
+    case 'CLEAR_DETAILS' : // clear details related to details page ;
+      return {...state,details : null }
+
+    case 'CLEAR_LIKED' : // clear details related to details page ;
+      return {...state,liked : null }
+
+    case 'APPEND_LIKED' : //append one item to data
+      return {...state,liked : [...state.liked,action.data] }
+
+    case 'POP_LIKED' : // remove one item from data
+      const newLiked = state.liked.filter(item => item.id !== action.data.id) ;
+      return {...state,liked : newLiked  }
+
     default :
       return state ;
   }

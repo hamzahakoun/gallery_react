@@ -11,12 +11,17 @@ const getRequest = (endpoint) => {
 }
 
 
-const request = (endpoint,payload,type = 'POST') => {
+const request = (endpoint,payload,type = 'POST',isFile = false) => {
 
   const baseUrl = config.base ;
   const token = localStorage.getItem('token') ;
-  const headers = {'Content-Type' : 'application/json','Authorization':`JWT ${token}`} ;
-  payload = JSON.stringify(payload) ;
+  let headers = {} ;
+  if (!isFile) {
+    headers = {'Content-Type' : 'application/json','Authorization':`JWT ${token}`} ;
+    payload = JSON.stringify(payload) ;
+  } else {
+    headers = {'Authorization':`JWT ${token}`} ;
+  }
 
   return fetch(`${baseUrl}/${endpoint}`,{
     method : type ,
@@ -26,7 +31,18 @@ const request = (endpoint,payload,type = 'POST') => {
 }
 
 
+const deleteRequest = (endpoint) => {
+  const baseUrl = config.base ;
+  const token = localStorage.getItem('token')  ;
+  const headers = {'Content-Type' : 'application/json','Authorization':`JWT ${token}`} ;
+  return fetch(`${baseUrl}/${endpoint}`,{
+    method : "DELETE",
+    headers : headers ,
+  })
+}
+
 export {
   getRequest ,
-  request
+  request,
+  deleteRequest
 }

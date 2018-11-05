@@ -10,6 +10,27 @@ const getData = (endpoint,type) => {
   }
 }
 
+
+// clear value of data (liked,searched,all) based on type
+const clearData = (type) => {
+  return (dispatch,getState) => {
+    dispatch({type : type})
+  }
+}
+
+const appendData = (type,obj) => {
+  return (dispatch,getState) => {
+    dispatch({type , data : obj})
+  }
+}
+
+
+const popData = (type,obj) => {
+    return (dispatch,getState) => {
+      dispatch({type, data : obj}) ;
+    }
+}
+
 // ge all tags
 const getTags = () => {
   return (dispatch,getState) => {
@@ -38,14 +59,7 @@ const checkTags = (tags,t) => {
   }
 }
 
-// clear the value of searched images 
-// will be used when user adds new tags to search for
-// so all data will be empty then will get new data
-const clearSearched = () => {
-  return (dispatch,getState) => {
-    dispatch({type : "CLEAR_SEARCHED"})
-  }
-}
+
 
 
 export {
@@ -53,5 +67,7 @@ export {
   getTags ,
   clearAll,
   checkTags,
-  clearSearched,
+  clearData,
+  appendData,
+  popData
 }

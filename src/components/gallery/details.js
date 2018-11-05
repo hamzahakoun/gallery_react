@@ -7,6 +7,7 @@ import { Grid,Paper,Typography } from '@material-ui/core' ;
 import Navbar from '../layout/navbar' ;
 import TagsList from './tagsList' ;
 import OptionsMenu from '../utils/optionsMenu' ;
+import Like from './like' ;
 
 const styles = {
   img : {
@@ -23,6 +24,7 @@ class Details extends Component {
 
   state = {
       data : null,
+      id : this.props.id ,
   }
 
 
@@ -30,6 +32,9 @@ class Details extends Component {
     this.getData() ;
   }
 
+  static getDerivedStateFromProps = (nextProps,prevState) =>  {
+      return nextProps ;
+  }
 
   // when loading this page get all details of this instance
   getData = () => this.props.getData(`images${this.props.id}`,'GET_DETAILS') ;
@@ -59,7 +64,7 @@ class Details extends Component {
 
 
     return (
-      <div>
+      <div className = 'details'>
         <Navbar pageName = {'details'} history = {this.props.history} search = {checked}/>
         { !data && <CircularProgress className = 'loading' color = 'secondary' /> }
         { data &&
@@ -85,6 +90,10 @@ class Details extends Component {
                       <img src = {data.url} alt = {data.id} style = {styles.img}/>
 
                     </Grid>
+                    <Grid item xs = {12} sm = {8} style = {{height : '10px'}}></Grid>
+                    <Grid item xs = {12} sm = {8} style = {{paddingLeft : '10px'}}>
+                      <Like item = {this.state.data}/>
+                    </Grid>
                     <Grid item xs = {12} sm = {8}>
                       <TagsList tags = {data.tags} history = {this.props.history} />
                     </Grid>
@@ -95,9 +104,7 @@ class Details extends Component {
 
 
               <Grid item xs = {false} sm = {1}></Grid>
-              <Grid item xs = {12} sm = {12}></Grid>
-              <Grid item xs = {12} sm = {12}></Grid>
-              <Grid item xs = {12} sm = {12}></Grid>
+              <Grid item xs = {12} sm = {8} style = {{height : '30px'}}></Grid>
               <Grid item xs = {12} sm = {12} style = {{paddingLeft : '20px'}}>
                 <Typography component="h2" variant="display1" gutterBottom>
                   More Like This
