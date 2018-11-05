@@ -34,7 +34,7 @@ const popData = (type,obj) => {
 // ge all tags
 const getTags = () => {
   return (dispatch,getState) => {
-    getRequest('images/tags')
+    getRequest('images/tags?exists=1')
     .then(resp => resp.json())
     .then(data => dispatch({type : 'GET_TAGS',data : data}))
   }

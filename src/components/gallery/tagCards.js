@@ -110,7 +110,7 @@ class TagCards extends Component {
   render = () => {
 
       let searchTag = '' ;
-      if (this.props.checkedTags.length > 0) {
+      if (this.props.checkedTags && this.props.checkedTags.length > 0) {
           searchTag += `?tags=${this.props.checkedTags[0].content},` ;
           this.props.checkedTags.slice(1).map(item => searchTag += `${item.content},`)
       }

@@ -29,7 +29,7 @@ export default class DialogComponent extends Component {
           aria-labelledby="alert-dialog-slide-title"
           aria-describedby="alert-dialog-slide-description"
           open={this.state.open}
-          onClose = { () => this.props.handleClose() }
+          onClose = { this.props.handleClose }
 
         >
           <DialogTitle id="alert-dialog-slide-title">

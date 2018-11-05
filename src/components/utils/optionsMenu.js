@@ -50,7 +50,7 @@ export default class OptionsMenu extends Component {
           }}
         >
           {this.state.optionsActionsMap.map((item,index) => (
-            <MenuItem key={index} onClick= {() => this.handleClose(item)} >
+            <MenuItem key={index} onClick= {() => {this.handleClose(item) ; item.action()}} >
               {item.content}
             </MenuItem>
           ))}
