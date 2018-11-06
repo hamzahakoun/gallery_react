@@ -27,7 +27,7 @@ const galleryReducer = (state = initState, action) => {
 
 
     case 'CLEAR' : // clear all data (all,likedl,searched,details)
-      return {all : null ,liked : null,searched : null,details :null,tags : null}
+      return {all : null ,liked : null,searched : null,details :null,tags : null,checkedTags : []}
 
     case 'CHECK_TAGS' :// check certain tags / all tags
       return {...state , checkedTags : [...state.checkedTags ,...action.data]}
@@ -49,6 +49,9 @@ const galleryReducer = (state = initState, action) => {
 
     case 'APPEND_LIKED' : //append one item to data
       return {...state,liked : [...state.liked,action.data] }
+
+    case 'APPEND_ALL' : //append one item to data
+      return {...state,all : [...state.all,action.data] }
 
     case 'CLEAER_TAGS' :
       return {...state,tags : null }

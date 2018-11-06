@@ -1,129 +1,14 @@
 import React, { Component } from 'react' ;
 import { connect } from 'react-redux' ;
-import { getData,getTags } from '../../store/actions/galleryActions' ;
+import { getData,getTags,appendData } from '../../store/actions/galleryActions' ;
 import ImagesGridItem from './imagesGridItem' ;
 import { Grid,Button,CircularProgress } from '@material-ui/core' ;
 import AddIcon from '@material-ui/icons/Add';
-import CreatableSelect from 'react-select/lib/Creatable' ;
 import DialogComponent from '../utils/dialog' ;
-import { request } from '../../utils/http' ;
 import Message from '../utils/message' ;
+import UploadImage from '../specifics/imagesGrid/uploadImageDialog' ;
+import { sendMessage, removeMessage } from '../../store/actions/messageActions' ;
 
-// upload image modal
-class UploadImage extends Component {
-
-  state = {
-    selectedFile : undefined,
-    selectFileName : '',
-    imgSrc : '',
-    value : '' ,
-    selectedTags : [] ,
-    tags : [] ,
-  }
-
-
-  // for selecting tags
-  handleChange = (lstOfItems,action) => this.setState({selectedTags : lstOfItems})
-
-  // select-react needs data to be like [{label : '',value:''}]
-  static prepareTags = (tags) => {
-    const result = [] ;
-    tags.map(item => result.push({label: item.content,value : item.id.toString()}))
-    return result ;
-  }
-
-  // select image to upload
-  handleSelectedFile = (e) => {
-    this.setState({
-      selectedFile : e.target.files[0],
-      selectFileName : e.target.files[0].name ,
-      imgSrc : window.URL.createObjectURL(e.target.files[0]),
-      value : e.target.files[0].value ,
-    })
-
-  }
-
-  // when this component first mount there will be no tags
-  // after it received tags then prepare them
-  static getDerivedStateFromProps = (nextProps,prevState) => {
-    if ( nextProps.tags && nextProps.tags.length ) {
-      return {tags : UploadImage.prepareTags(nextProps.tags)} ;
-    }
-    return nextProps ;
-  }
-
-  // if there was tags data when this component mounted then just prepare it
-  // else request tags
-  componentDidMount = () => {
-    if (this.props.tags) {
-      this.setState({tags : UploadImage.prepareTags(this.props.tags)})
-    } else {
-      this.props.getTags() ;
-    }
-  }
-
-
-  // after successful upload reset all form's fields
-  afterSuccessfulUpload = () => {
-    this.setState({
-      selectedFile : '' ,
-      selectFileName : '',
-      imgSrc : '' ,
-      value : '' ,
-      selectedTags : [] ,
-    })
-  }
-
-
-  // send post request to upload the image
-  onSubmit = (endpoint) => {
-    let tagsString = '' ;
-     this.state.selectedTags.map(item => tagsString += `${item.label}#`)
-     tagsString = tagsString.substring(0,tagsString.length -1) ;
-     const fd = new FormData() ;
-     fd.append('url',this.state.selectedFile,this.state.selectFileName) ;
-     fd.append('tags_list',tagsString) ;
-     request(endpoint,fd,"POST",true)
-     .then(resp => resp.json())
-     .then(data => {
-
-       this.props.setMessageContent('Image Uploded successfuly !')
-       this.props.handleDialogClose() ;
-       this.props.showMessage() ;
-       this.props.appendData(data) ;
-       this.afterSuccessfulUpload() ;
-     }) ;
-  }
-
-
-  render = () => {
-
-    return (
-      <div>
-        <input onChange = { this.handleSelectedFile } type = 'file' value = {this.state.value} /> <br /><br /><br />
-        <CreatableSelect closeMenuOnSelect = {false} value = { this.state.selectedTags } isMulti={true} options = {this.state.tags} onChange = {this.handleChange}/>
-
-        <div style = {{marginTop : "220px"}}>
-          <Button
-            variant="contained"
-            disabled = { !this.state.selectedTags.length }
-            onClick={ () => this.onSubmit('images') }
-            color="primary"
-            style = {{marginRight : '10px'}}
-            >
-            Upload
-          </Button>
-          <Button onClick={() => this.props.handleDialogClose()} color="secondary" variant="contained">
-            Cancel
-          </Button>
-        </div>
-
-      </div>
-
-    )
-  }
-
-}
 
 const styles = {
   grid : {
@@ -138,12 +23,11 @@ class ImagesGrid extends Component {
     data : this.props.type ? this.props[this.props.type] : this.props.all ,
     searchTags : [],
     openUploadDialog : false ,
-    showUploadMessage : false ,
-    messageContent : '' ,
+    showUploadMessage : this.props.showMessage ,
+    messageContent : this.props.messageContent ,
   }
 
   componentDidMount = () => {
-
     if (!this.state.data) {
 
       switch(this.props.type) {
@@ -163,20 +47,32 @@ class ImagesGrid extends Component {
     }
   }
 
+  static getDerivedStateFromProps = (nextProps,prevState) => {
+    if (!nextProps.type) {
+      return {
+        data : nextProps.all,
+        messageContent : nextProps.messageContent,
+        showUploadMessage :nextProps.showMessage
+      }
+    } else {
+      return {
+          data : nextProps[nextProps.type] ,
+          messageContent : nextProps.messageContent,
+          showUploadMessage :nextProps.showMessage
+        }
+    }
+    return nextProps ;
+  }
+
   // control the upload modal
   handleUploadDialogClose = () => this.setState({ openUploadDialog : false })
 
+  showMessage = () => this.props.sendMessage('Image has been uploaded successfuly !')
 
-  // control the message of upload
-  ToggleMessageShow = () => this.setState({ showUploadMessage : !this.state.showUploadMessage })
+  hideMessage = () => this.props.removeMessage()
 
-  appendData = (obj) => {
-    // const {data} = this.state ;
-    // console.log(data) ;
-    // data.push(obj) ;
-    // this.setState({data}) ;
-  }
-
+  // append new images only for all section
+  appendData = (obj) => this.props.appendData('APPEND_ALL',obj) ;
 
   setMessageContent = (content) => this.setState({ messageContent : content })
 
@@ -192,7 +88,7 @@ class ImagesGrid extends Component {
     return (
       <Grid container spacing = {8} style= {styles.grid} className = 'imgs-grid-container'>
         {data &&
-          data.map(item => <ImagesGridItem item = {item} key = {item.id}/>)
+          data.map(item => <ImagesGridItem  item = {item} key = {item.id}/>)
         }
         {!data && <CircularProgress className = 'loading' color = 'secondary' />}
         {data && data.length === 0 && <h3 className = 'loading'>No data to be displayed</h3>}
@@ -210,7 +106,7 @@ class ImagesGrid extends Component {
         <div style = {{height : '350px',width : '300px'}}>
           <UploadImage
             handleDialogClose = {this.handleUploadDialogClose}
-            showMessage = {this.ToggleMessageShow}
+            showMessage = {this.showMessage}
             setMessageContent = {this.setMessageContent}
             appendData = {this.appendData}
             tags = {this.props.tags}
@@ -223,7 +119,7 @@ class ImagesGrid extends Component {
         <Message
           message = {this.state.messageContent}
           open = {this.state.showUploadMessage}
-          handleClose = {this.ToggleMessageShow}
+          handleClose = {this.hideMessage}
           />
       </Grid>
     )
@@ -237,8 +133,10 @@ const mapStateToProps = (state) => {
     all : state.gallery.all ,
     searched : state.gallery.searched ,
     liked : state.gallery.liked ,
-    checkedTags : state.gallery.checkTags,
+    checkedTags : state.gallery.checkedTags,
     tags : state.gallery.tags ,
+    showMessage : state.messaging.display,
+    messageContent : state.messaging.content ,
   }
 }
 
@@ -247,6 +145,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getData : (endpoint,type) => dispatch(getData(endpoint,type)),
     getTags : () => dispatch(getTags()) ,
+    appendData :(type,obj) => dispatch(appendData(type,obj)),
+    sendMessage : (message) => dispatch(sendMessage(message)) ,
+    removeMessage : () => dispatch(removeMessage()) 
   }
 }
 

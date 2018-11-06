@@ -5,7 +5,7 @@ const messageReducer = (state = initState, action) => {
     case 'SEND_MESSAGE' :
       return {...state,display : true,content : action.message}
     case 'CLOSE_MESSAGE' :
-      return {...state,display : false,content : ''}
+      return {...state,display : false}
     default :
       return  state ;
   }

@@ -10,6 +10,10 @@ const authReducer = (state = initState, action) => {
       localStorage.setItem('token',action.token) ;
       return {...state,authError : null,isUserAuthorized : true }
 
+    case 'LOGOUT' :
+      localStorage.removeItem('token') ;
+      return {...state,isUserAuthorized : false}
+
     case 'HIDE_LOGIN_ERROR_MESSAGE' :
       return {...state,authError : null }
 

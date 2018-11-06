@@ -2,10 +2,8 @@ import React, { Component } from 'react' ;
 
 import { connect } from 'react-redux' ;
 import { getData,getTags,clearAll } from '../../store/actions/galleryActions' ;
+import { sendMessage, removeMessage } from '../../store/actions/messageActions' ;
 import { Redirect } from 'react-router-dom' ;
-
-import CreatableSelect from 'react-select/lib/Creatable' ;
-import { CircularProgress, Grid,Paper,Typography,Button  } from '@material-ui/core' ;
 
 import ImagesGrid from './imagesGrid' ;
 import Navbar from '../layout/navbar' ;
@@ -15,8 +13,23 @@ import Like from './like' ;
 import ConfirmationMessage from '../utils/confirmationMessage' ;
 import Message from '../utils/message' ;
 import DialogComponent from '../utils/dialog' ;
+import AddNewTagsDialog from '../specifics/details/addTagsDialog' ;
+import RemoveTagsDialog from '../specifics/details/removeTagsDialog' ;
 
 import { request } from '../../utils/http' ;
+
+import {
+  CircularProgress,
+  Grid,
+  Paper,
+  Typography,
+  Button  ,
+  List,
+  ListItem ,
+  ListItemSecondaryAction,
+  ListItemText,
+  Checkbox,
+} from '@material-ui/core' ;
 
 const styles = {
   img : {
@@ -30,109 +43,17 @@ const styles = {
 }
 
 
-class AddNewTagsDialog extends Component {
-
-  state = {
-    tags : [] , // will be ready tags
-    selectedTags : [] ,
-    open : this.props.open,
-    dissableSubmitButton : false ,
-  }
-
-
-  static getDerivedStateFromProps = (nextProps,prevState) => {
-    if (nextProps.tags && nextProps.tags.length) {
-      return {tags :AddNewTagsDialog.prepareTags(nextProps.tags),open :nextProps.open}
-    }
-
-    return nextProps ;
-  }
-
-  static prepareTags = (tags) => {
-    const result = [] ;
-    tags.map(item => result.push({label: item.content,value : item.id.toString()}))
-    return result ;
-  }
-
-  componentDidMount = () => {
-    if (this.props.tags) {
-      this.setState({tags :AddNewTagsDialog.prepareTags(this.props.tags)}) ;
-    } else {
-      this.props.getTags() ;
-    }
-
-  }
-
-  handleChange = (lstOfItems,action) => this.setState({selectedTags : lstOfItems})
-
-
-  addTags = () => {
-    this.setState({dissableSubmitButton :true})
-    const id = this.props.item.id ;
-    let tagsList =  '' ;
-    this.state.selectedTags.map(tag => tagsList += `${tag.label}#`) ;
-    tagsList = tagsList.slice(0,tagsList.length -1) ;
-    const payload = {tags_list : tagsList} ;
-    request(`images${id}/`,payload,'PUT')
-    .then(resp => resp.json())
-    .then(data => {
-      this.props.updateTags(data.tags) ;
-      this.props.handleDialogClose() ;
-      this.props.showMessage() ;
-      this.setState({dissableSubmitButton :false,selectedTags : [] })
-    }) ;
-  }
-
-  render = () => {
-
-    return (
-      <div style = {{width : '300px'}}>
-        {
-
-          this.state.tags && this.state.tags.length &&
-          <div>
-            <CreatableSelect
-              closeMenuOnSelect = {false}
-              value = { this.state.selectedTags }
-              isMulti={true}
-              options = {this.state.tags}
-              onChange = {this.handleChange}
-              />
-
-            <div style = {{marginTop : "200px"}}>
-              <Button
-                variant="contained"
-                disabled = { !this.state.selectedTags.length }
-                onClick={ () => this.addTags() }
-                color="primary"
-                style = {{marginRight : '10px'}}
-                disabled = {this.state.dissableSubmitButton || this.state.selectedTags.length === 0}
-                >
-                Confirm
-              </Button>
-              <Button onClick={ this.props.handleDialogClose } color="secondary" variant="contained">
-                Cancel
-              </Button>
-            </div>
-          </div>
-        }
-
-
-      </div>
-    )
-  }
-
-}
-
 class Details extends Component {
 
   state = {
       data : null,
       id : this.props.id ,
-      showMessage : false ,
+      showMessage : this.props.showMessage,
       showConfimration : false ,
       showAddTagsDialog : false ,
+      showRemoveTagsDialog :false,
       deleted : false ,
+      messageContent : this.props.messageContent
   }
 
 
@@ -140,8 +61,9 @@ class Details extends Component {
     this.getData() ;
   }
 
+
   deleteImg = () => {
-      const payload  = {deleted : true,tags_list : 'spam' } ;
+      const payload  = {deleted : true} ;
       request(`images${this.state.id}/`,payload,'PUT')
       .then(resp => {
         if (resp.status === 200) {
@@ -149,24 +71,28 @@ class Details extends Component {
           this.props.clearAll() // clear all data to update it
           this.setState({deleted : true})
           this.props.history.push('/') ;
+          this.props.sendMessage('Image has been deleted !')
         }
       }) ;
   }
 
 
   static getDerivedStateFromProps = (nextProps,prevState) =>  {
-      return nextProps ;
+    return nextProps ;
   }
   // when loading this page get all details of this instance
   getData = () => this.props.getData(`images${this.props.id}`,'GET_DETAILS') ;
 
-  ToggleShow = (key) => this.setState({[key] : !this.state[key]})
+  hide = (key) => this.setState({[key] : false })
+
+  show = (key) => this.setState({[key] : true })
 
   updateTags = (tags) => {
     const { data } = this.state ;
     data.tags = tags ;
     this.setState({data}) ;
   }
+
 
   render = () => {
 
@@ -175,8 +101,9 @@ class Details extends Component {
     }
 
     const options = [
-      {content : 'Add new Tags',action : () => this.ToggleShow('showAddTagsDialog') },
-      {content : 'Delete this image',action : () => this.ToggleShow('showConfimration')}
+      {content : 'Add new Tags',action : () => this.show('showAddTagsDialog') },
+      {content : 'Remove Tags',action : ()=> this.show('showRemoveTagsDialog')},
+      {content : 'Delete this image',action : () => this.show('showConfimration')},
     ]
     const { data } = this.state ;
     const  {checkedTags} = this.props ;
@@ -197,7 +124,6 @@ class Details extends Component {
       checkedTags.map(item => checked += `${item.content},`) ;
     }
 
-
     return (
       <div className = 'details'>
         <Navbar pageName = {'details'} history = {this.props.history} search = {checked}/>
@@ -212,7 +138,7 @@ class Details extends Component {
                 <Paper style = {styles.paper}>
                   <Grid container spacing = {8}>
                     <Grid item xs = {12} sm = {8}>
-                      <OptionsMenu optionsActionsMap = {options} />
+                      {this.state.data.is_owner && <OptionsMenu optionsActionsMap = {options} /> }
                     </Grid>
                     <Grid item xs = {12} sm = {8}>
 
@@ -240,36 +166,54 @@ class Details extends Component {
                 </Typography>
               </Grid>
             </Grid>
-            <ImagesGrid type = {'searched'} search = {searchTags} />
+            <ImagesGrid type = {'searched'} search = {searchTags}  />
 
             <DialogComponent
               open = {this.state.showAddTagsDialog}
-              handleClose = {() => this.ToggleShow('showAddTagsDialog')}
+              handleClose = {() => this.hide('showAddTagsDialog')}
               title = {'Add new Tags'}
             >
               <AddNewTagsDialog
                 tags = {this.props.tags}
                 getTags = {this.props.getTags}
-                handleDialogClose = {() => this.ToggleShow('showAddTagsDialog')}
+                handleDialogClose = {() => this.hide('showAddTagsDialog')}
                 item = {this.state.data}
                 updateTags = {this.updateTags}
-                showMessage = {() => this.ToggleShow('showMessage')}
+                showMessage = {() => this.props.sendMessage('New tags has been added successfuly !')}
               />
+
+
+            </DialogComponent>
+
+
+            <DialogComponent
+              open = {this.state.showRemoveTagsDialog}
+              handleClose = {() => this.hide('showRemoveTagsDialog')}
+              title = {'Uncheck to remove tags'}
+            >
+              <RemoveTagsDialog
+                item = {this.state.data}
+                updateTags = {this.updateTags}
+                handleDialogClose = {() => this.hide('showRemoveTagsDialog')}
+                showMessage = {() => this.props.sendMessage('Tags has been removed successfuly !')}
+              />
+
             </DialogComponent>
 
             <ConfirmationMessage
               message = {"You won't be able to undo this once confirmed"}
               title = {'Are you sure you want to delete this image ?'}
               open = {this.state.showConfimration}
-              handleClose = {() => this.ToggleShow('showConfimration')}
+              handleClose = {() => this.hide('showConfimration')}
               handleSubmit = {this.deleteImg}
             />
 
             <Message
               open = {this.state.showMessage}
-              message = {'Tags has been added successfuly !'}
-              handleClose = {() => this.ToggleShow('showMessage')}
+              message = {this.state.messageContent}
+              handleClose = {() => this.props.removeMessage}
             />
+
 
           </div>
 
@@ -285,7 +229,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     getData : (endpoint,type) => dispatch(getData(endpoint,type)),
     getTags : () => dispatch(getTags()) ,
-    clearAll : () =>dispatch(clearAll())
+    clearAll : () =>dispatch(clearAll()),
+    sendMessage : (message) => dispatch(sendMessage(message)),
+    removeMessage : () => dispatch(removeMessage())
   }
 }
 
@@ -296,6 +242,8 @@ const mapStoreToProps = (state,ownProps) => {
     data : state.gallery.details ,
     checkedTags  : state.gallery.checkedTags ,
     tags : state.gallery.tags ,
+    showMessage : state.messaging.display ,
+    messageContent : state.messaging.content ,
   }
 }
 export default connect(mapStoreToProps,mapDispatchToProps)(Details) ;

@@ -15,6 +15,7 @@ export default class Message extends Component {
   }
 
   static getDerivedStateFromProps = (nextProps,prevState) => {
+    
     if (nextProps.open && nextProps.open.length > 0) {
       return {open : nextProps.open,message : nextProps.message}
     }

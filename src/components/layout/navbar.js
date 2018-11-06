@@ -8,12 +8,12 @@ import {
 } from '@material-ui/core';
 import { connect } from 'react-redux' ;
 import { clearAll,clearData } from '../../store/actions/galleryActions' ;
-
+import { logout } from '../../store/actions/authActions' ;
 
 // search refers to the tags the user is searching for
 // so when user clicks home page
 // he will be redirected to the same tags not a new page with all images
-const Navbar = ({ pageName ,history,clear,clearData,search}) => {
+const Navbar = ({ pageName ,history,clear,clearData,search,logout}) => {
   // i should always add the ?tags=.... to the link of home page
   // so home page link will be dynmic and thus i can track what the user
   // searching for
@@ -34,7 +34,7 @@ const Navbar = ({ pageName ,history,clear,clearData,search}) => {
             <Button
               color = 'inherit'
               onClick = {
-                () => { localStorage.removeItem('token') ;clear();  history.push('/login'); }
+                () => { logout() ; clear();history.push('/login'); }
               }
 
               >Logout</Button>
@@ -52,7 +52,7 @@ const Navbar = ({ pageName ,history,clear,clearData,search}) => {
             <Button
               color = 'inherit'
               onClick = {
-                () => { localStorage.removeItem('token') ; clear() ; history.push('/login') }
+                () => {logout();clear(); history.push('/login') }
               }
 
               >Logout</Button>
@@ -76,8 +76,9 @@ const mapStoreToProps = (state) => {
 // navbar should access clear to clear all data when user logout ;
 const mapDispatchToProps = (dispatch) => {
   return {
-    clear : () => dispatch(clearAll) ,
-    clearData : (type) => dispatch(clearData(type))
+    clear : () => dispatch(clearAll()) ,
+    clearData : (type) => dispatch(clearData(type)) ,
+    logout :  () => dispatch(logout())
   }
 }
 

@@ -17,6 +17,12 @@ const login = (credentials,history) => {
 }
 
 
+const logout = () => {
+  return (dispatch) => {
+    dispatch({type : 'LOGOUT'}) ;
+  }
+}
+
 
 const hideLoginErrorMessage = () => {
 
@@ -24,7 +30,9 @@ const hideLoginErrorMessage = () => {
     dispatch({type :'HIDE_LOGIN_ERROR_MESSAGE'})
   }
 }
+
 export {
   login ,
-  hideLoginErrorMessage
+  hideLoginErrorMessage,
+  logout
 }
