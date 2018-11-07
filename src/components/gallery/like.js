@@ -18,8 +18,8 @@ class Like extends Component {
       .then(resp => resp.json())
       .then(data => {
         this.setState({isLiked : true ,color : "#f72a2a",likesNum : this.state.likesNum + 1 })
-        this.props.appendData('CLEAR_LIKED',data) ;
-        }) ;
+        this.props.appendData('APPEND_LIKED',this.props.item) ;
+      }) ;
   }
 
   dislike = () => {

@@ -15,6 +15,7 @@ import Message from '../utils/message' ;
 import DialogComponent from '../utils/dialog' ;
 import AddNewTagsDialog from '../specifics/details/addTagsDialog' ;
 import RemoveTagsDialog from '../specifics/details/removeTagsDialog' ;
+import Comment from './comment' ;
 
 import { request } from '../../utils/http' ;
 
@@ -42,7 +43,6 @@ const styles = {
   }
 }
 
-
 class Details extends Component {
 
   state = {
@@ -53,14 +53,21 @@ class Details extends Component {
       showAddTagsDialog : false ,
       showRemoveTagsDialog :false,
       deleted : false ,
-      messageContent : this.props.messageContent
+      messageContent : this.props.messageContent,
+      commentsHeight : 0 ,
   }
 
+  getHeight = (element) => {
+    if (element) {
+      setTimeout(() => {
+        this.setState({commentsHeight : element.clientHeight});
+      } , 1000)
+    }
+  }
 
   componentDidMount = () => {
-    this.getData() ;
+    this.getData(this.state.id) ;
   }
-
 
   deleteImg = () => {
       const payload  = {deleted : true} ;
@@ -78,10 +85,17 @@ class Details extends Component {
 
 
   static getDerivedStateFromProps = (nextProps,prevState) =>  {
+    
+    if (nextProps.id !== prevState.id) {
+      nextProps.getData(`images${nextProps.id}`,'GET_DETAILS') ;
+      return { ...nextProps,commentsHeight : 0}
+    }
+
     return nextProps ;
   }
   // when loading this page get all details of this instance
-  getData = () => this.props.getData(`images${this.props.id}`,'GET_DETAILS') ;
+  getData = (id) => this.props.getData(`images${id}/`,'GET_DETAILS') ;
+
 
   hide = (key) => this.setState({[key] : false })
 
@@ -125,47 +139,59 @@ class Details extends Component {
     }
 
     return (
+
       <div className = 'details'>
         <Navbar pageName = {'details'} history = {this.props.history} search = {checked}/>
         { !data && <CircularProgress className = 'loading' color = 'secondary' /> }
         { data &&
           <div>
             <Grid container spacing = {8}>
+
               <Grid item xs = {false} sm = {1}></Grid>
 
-              <Grid item xs = {12} sm = {10}>
+              <Grid item xs ={12} sm = {10}>
 
                 <Paper style = {styles.paper}>
-                  <Grid container spacing = {8}>
-                    <Grid item xs = {12} sm = {8}>
-                      {this.state.data.is_owner && <OptionsMenu optionsActionsMap = {options} /> }
-                    </Grid>
-                    <Grid item xs = {12} sm = {8}>
 
-                      <img src = {data.url} alt = {data.id} style = {styles.img}/>
+                  <Grid container spacing = {32}>
 
-                    </Grid>
-                    <Grid item xs = {12} sm = {8} style = {{height : '10px'}}></Grid>
-                    <Grid item xs = {12} sm = {8} style = {{paddingLeft : '10px'}}>
-                      <Like item = {this.state.data}/>
-                    </Grid>
                     <Grid item xs = {12} sm = {8}>
-                      <TagsList tags = {data.tags} history = {this.props.history} />
+                      { this.state.data.is_owner && <OptionsMenu optionsActionsMap = {options} /> }
+                      <img ref = {this.getHeight} style = {styles.img} src = {this.state.data.url} alt = {this.state.data.id} />
+                      <div style = {{height : '30px'}}></div>
+                      <Like item = {this.state.data} />
+                      <div style = {{height : '20px'}}></div>
+                      <TagsList tags = {this.state.data.tags} />
                     </Grid>
+
+                    <Grid item xs = {12} sm = {4}>
+                      <Grid item xs ={12} sm = {4}>
+                        <h3>Comments</h3>
+                        {
+                          this.state.commentsHeight > 0 &&
+                          <Comment
+                             height = {this.state.commentsHeight}
+                             comments= {this.state.data.comments}
+                             id = {this.state.data.id}
+                             />
+                         }
+
+                         {this.state.commentsHeight === 0 && <CircularProgress color = 'secondary'/>}
+                      </Grid>
+                    </Grid>
+
                   </Grid>
+
                 </Paper>
+
+
 
               </Grid>
 
 
               <Grid item xs = {false} sm = {1}></Grid>
-              <Grid item xs = {12} sm = {8} style = {{height : '30px'}}></Grid>
-              <Grid item xs = {12} sm = {12} style = {{paddingLeft : '20px'}}>
-                <Typography component="h2" variant="display1" gutterBottom>
-                  More Like This
-                </Typography>
-              </Grid>
             </Grid>
+            <h2 style = {{marginLeft : "20px"}}>More like this</h2>
             <ImagesGrid type = {'searched'} search = {searchTags}  />
 
             <DialogComponent
@@ -211,7 +237,7 @@ class Details extends Component {
             <Message
               open = {this.state.showMessage}
               message = {this.state.messageContent}
-              handleClose = {() => this.props.removeMessage}
+              handleClose = {this.props.removeMessage}
             />
 
 

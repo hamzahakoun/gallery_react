@@ -15,7 +15,7 @@ export default class Message extends Component {
   }
 
   static getDerivedStateFromProps = (nextProps,prevState) => {
-    
+
     if (nextProps.open && nextProps.open.length > 0) {
       return {open : nextProps.open,message : nextProps.message}
     }
@@ -34,7 +34,7 @@ export default class Message extends Component {
               horizontal: 'left',
             }}
             open={this.state.open}
-            autoHideDuration={6000}
+            autoHideDuration={3000}
             onClose={this.handleClose}
             message={this.state.message}
             action={[

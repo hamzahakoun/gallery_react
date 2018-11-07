@@ -29,6 +29,9 @@ const Navbar = ({ pageName ,history,clear,clearData,search,logout}) => {
       <div>
         <AppBar position="static" color="primary">
           <Toolbar >
+            <Button>
+              <img src = '../angular.png' id = 'logo' style = {{width :'50px',height : '50px'}} />
+            </Button>
             <Button color = 'inherit' onClick = {()=>history.push(`/${search}`)}>Home</Button>
             <Button color = 'inherit' onClick = {()=>history.push('/tags')}>Tags</Button>
             <Button
@@ -38,6 +41,7 @@ const Navbar = ({ pageName ,history,clear,clearData,search,logout}) => {
               }
 
               >Logout</Button>
+
           </Toolbar>
         </AppBar>
       </div>
@@ -48,6 +52,9 @@ const Navbar = ({ pageName ,history,clear,clearData,search,logout}) => {
       <div>
         <AppBar position="static" color="primary" style = {{marginBottom : '10px'}}>
           <Toolbar >
+            <Button>
+              <img src = '../angular.png' id = 'logo' style = {{width :'50px',height : '50px'}} />
+            </Button>
             <Button color = 'inherit' onClick = {() => {clearData('CLEAR_DETAILS') ;history.push(`/${search}`)}}>Home</Button>
             <Button
               color = 'inherit'
