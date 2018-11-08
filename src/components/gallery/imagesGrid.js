@@ -24,7 +24,6 @@ class ImagesGrid extends Component {
     openUploadDialog : false ,
     showMessage : this.props.showMessage ,
     messageContent : this.props.messageContent ,
-    search : this.props.search , // search
     details : this.props.details ,
   }
 
@@ -54,7 +53,8 @@ class ImagesGrid extends Component {
           }
           // else update the glabal state
           this.props.getData(`images${this.props.search}`,'GET_SEARCH')  ;
-
+          break ;
+          
         default :
           this.props.getData('images','GET_ALL') ;
           break
@@ -63,7 +63,7 @@ class ImagesGrid extends Component {
   }
 
   // i need this to show messages in case user deleted image
-  static getDerivedStateFromProps = (nextProsp,prevState) => nextProsp ; 
+  static getDerivedStateFromProps = (nextProsp,prevState) => nextProsp ;
 
   // control the upload modal
   handleUploadDialogClose = () => this.setState({ openUploadDialog : false })

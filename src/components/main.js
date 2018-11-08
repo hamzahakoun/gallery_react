@@ -2,11 +2,8 @@ import React, { Component } from 'react' ;
 import Navbar from './layout/navbar' ;
 import ImagesGrid from './gallery/imagesGrid' ;
 import {
-  AppBar,
   Tabs,
   Tab,
-  Typography,
-
 } from '@material-ui/core' ;
 
 
@@ -19,7 +16,7 @@ export default class Main extends Component  {
   handleChange = (e,value) => this.setState({tabIndex : value})
 
   render = () => {
-    
+
     return (
       <div>
         <Navbar history = {this.props.history} location = {this.props.location}/>

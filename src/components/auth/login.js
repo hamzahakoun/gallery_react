@@ -1,5 +1,4 @@
 import React , { Component } from 'react' ;
-import { request } from '../../utils/http' ;
 import { connect } from 'react-redux' ;
 import { login,hideLoginErrorMessage } from '../../store/actions/authActions' ;
 import { Redirect } from 'react-router-dom' ;
@@ -10,14 +9,8 @@ import {
   TextField,
   Button,
   Paper,
-  InputAdornment,
   Typography
 } from '@material-ui/core'
-
-import {
-  Lock,
-  AccountCircle,
-} from '@material-ui/icons' ;
 
 
 const styles = {
@@ -60,8 +53,8 @@ class Login extends Component {
 
 
   render = () => {
-    
-    const { isUserAuthorized,authError } = this.props ;
+
+    const { isUserAuthorized } = this.props ;
     const token = localStorage.getItem('token') ; // if user filled the url manually
 
     // this will cause the app to redirect to home page after successful login
@@ -82,7 +75,7 @@ class Login extends Component {
 
                 <Grid item xs = {12} sm = {12}>
                   <h3>Welcome</h3>
-                  <img id = 'logo' src = './angular.png' />
+                  <img alt = 'logo' id = 'logo' src = './angular.png' />
                 </Grid>
                 <Grid item xs = {12} sm = {12}>
                 <TextField

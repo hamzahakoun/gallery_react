@@ -5,7 +5,6 @@ import {
   DialogTitle,
   Dialog,
   Slide,
-  Button
 } from '@material-ui/core' ;
 
 const Transition = (props) => <Slide direction = 'up' {...props} />

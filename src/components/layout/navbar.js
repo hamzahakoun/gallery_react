@@ -1,9 +1,7 @@
 import React from 'react' ;
-import { Link } from 'react-router-dom' ;
 import {
   AppBar,
   Toolbar,
-  Typography,
   Button
 } from '@material-ui/core';
 import { connect } from 'react-redux' ;
@@ -22,7 +20,7 @@ const Navbar = ({ pageName ,history,clear,clearData,search,logout}) => {
   if (!search) {
     search  =  history.location.search ;
   }
-  
+
   if (!pageName) {
 
     return (
@@ -30,7 +28,7 @@ const Navbar = ({ pageName ,history,clear,clearData,search,logout}) => {
         <AppBar position="static" color="primary">
           <Toolbar >
             <Button>
-              <img src = '../angular.png' id = 'logo' style = {{width :'50px',height : '50px'}} />
+              <img alt = 'logo' src = '../angular.png' id = 'logo' style = {{width :'50px',height : '50px'}} />
             </Button>
             <Button color = 'inherit' onClick = {()=>history.push(`/${search}`)}>Home</Button>
             <Button color = 'inherit' onClick = {()=>history.push('/tags')}>Tags</Button>
@@ -53,7 +51,7 @@ const Navbar = ({ pageName ,history,clear,clearData,search,logout}) => {
         <AppBar position="static" color="primary" style = {{marginBottom : '10px'}}>
           <Toolbar >
             <Button>
-              <img src = '../angular.png' id = 'logo' style = {{width :'50px',height : '50px'}} />
+              <img alt = 'logo' src = '../angular.png' id = 'logo' style = {{width :'50px',height : '50px'}} />
             </Button>
             <Button color = 'inherit' onClick = {() => {clearData('CLEAR_DETAILS') ;history.push(`/${search}`)}}>Home</Button>
             <Button
@@ -71,13 +69,6 @@ const Navbar = ({ pageName ,history,clear,clearData,search,logout}) => {
   }
 
 
-}
-
-
-const mapStoreToProps = (state) => {
-  return {
-
-  }
 }
 
 // navbar should access clear to clear all data when user logout ;

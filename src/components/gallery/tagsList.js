@@ -15,13 +15,7 @@ export default class TagsList extends Component {
   handleTagItemClick = (content) => {this.props.history.push(`/?tags=${content}`)}
 
   render = () => {
-    const properties = {
-      duration: 5000,
-      transitionDuration: 100,
-      infinite: true,
-      indicators: true,
-      arrows: true
-    }
+  
     return (
       <div style = {{display : 'flex' ,height :'70px',overflowX : 'scroll',wrapDirection : 'row' }}>
           {this.state.tags.map(item => {

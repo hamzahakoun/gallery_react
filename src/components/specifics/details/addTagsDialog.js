@@ -75,7 +75,6 @@ class AddNewTagsDialog extends Component {
             <div style = {{marginTop : "200px"}}>
               <Button
                 variant="contained"
-                disabled = { !this.state.selectedTags.length }
                 onClick={ () => this.addTags() }
                 color="primary"
                 style = {{marginRight : '10px'}}

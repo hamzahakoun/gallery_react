@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Navbar } from './components' ;
 import  { request } from './utils/http' ;
 import { BrowserRouter,Switch, Route } from 'react-router-dom' ;
 import PrivateRoute from './components/utils/privateRoute' ;
