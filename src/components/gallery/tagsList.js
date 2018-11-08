@@ -26,8 +26,8 @@ export default class TagsList extends Component {
       <div style = {{display : 'flex' ,height :'70px',overflowX : 'scroll',wrapDirection : 'row' }}>
           {this.state.tags.map(item => {
             return (
-              <span style = {{margin : '5px',position :'relative' }}>
-                <TagItem key = {item.id} tagItem = {item} handleClick = {this.handleTagItemClick}/>
+              <span key = {item.id}  style = {{margin : '5px',position :'relative' }}>
+                <TagItem tagItem = {item} handleClick = {this.handleTagItemClick}/>
               </span>
 
             )

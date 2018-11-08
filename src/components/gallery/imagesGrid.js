@@ -47,7 +47,10 @@ class ImagesGrid extends Component {
 
     }
   }
-
+  static getDerivedStateFromProps = (nextProps,prevState) => {
+    console.log( nextProps.search ) ;
+    return nextProps ; 
+  }
   // control the upload modal
   handleUploadDialogClose = () => this.setState({ openUploadDialog : false })
 
@@ -60,9 +63,6 @@ class ImagesGrid extends Component {
 
   setMessageContent = (content) => this.setState({ messageContent : content })
 
-  static getDerivedStateFromProps = (nextProps,prevState) => {
-    return nextProps ;
-  }
 
   render = () => {
     let type = 'all' ;

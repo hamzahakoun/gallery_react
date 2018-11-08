@@ -19,7 +19,7 @@ export default class Main extends Component  {
   handleChange = (e,value) => this.setState({tabIndex : value})
 
   render = () => {
-
+    
     return (
       <div>
         <Navbar history = {this.props.history} location = {this.props.location}/>

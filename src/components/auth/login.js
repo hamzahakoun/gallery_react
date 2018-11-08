@@ -60,10 +60,10 @@ class Login extends Component {
 
 
   render = () => {
-
+    
     const { isUserAuthorized,authError } = this.props ;
     const token = localStorage.getItem('token') ; // if user filled the url manually
-    
+
     // this will cause the app to redirect to home page after successful login
     // and it also works as a protector against redirecting to login page manullay
     if (isUserAuthorized || token) {

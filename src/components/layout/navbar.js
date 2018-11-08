@@ -22,7 +22,7 @@ const Navbar = ({ pageName ,history,clear,clearData,search,logout}) => {
   if (!search) {
     search  =  history.location.search ;
   }
-
+  
   if (!pageName) {
 
     return (
