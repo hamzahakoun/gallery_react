@@ -52,7 +52,7 @@ class ImagesGrid extends Component {
             this.requestDataLocally() ;
             return ;
           }
-          // else update the glabal state 
+          // else update the glabal state
           this.props.getData(`images${this.props.search}`,'GET_SEARCH')  ;
 
         default :
@@ -62,6 +62,8 @@ class ImagesGrid extends Component {
     }
   }
 
+  // i need this to show messages in case user deleted image
+  static getDerivedStateFromProps = (nextProsp,prevState) => nextProsp ; 
 
   // control the upload modal
   handleUploadDialogClose = () => this.setState({ openUploadDialog : false })
