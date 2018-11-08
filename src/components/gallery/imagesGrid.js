@@ -64,8 +64,11 @@ class ImagesGrid extends Component {
   }
 
   // i need this to show messages in case user deleted image
-  static getDerivedStateFromProps = (nextProsp,prevState) => {
-    return nextProsp ;
+  static getDerivedStateFromProps = (nextProps,prevState) => {
+    if (nextProps.type) {
+      return nextProps
+    }
+    return {...nextProps,data: nextProps.all}  ;
   }
 
   // control the upload modal
