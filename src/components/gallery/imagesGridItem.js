@@ -18,7 +18,7 @@ const styles = {
 const ImagesGridItem = ({item,clearData}) => {
   return (
     <Grid item xs = {6} sm = {3} style = {styles.grid}>
-      <Link to = {`/${item.id}`} onClick = {() => {clearData("CLEAR_SEARCHED");clearData('CLEAR_DETAILS')}}>
+      <Link to = {`/${item.id}`} onClick = {() => {clearData('CLEAR_DETAILS')}}>
         <img src = {item.thumbnail} alt = {item.id} style = {styles.img}/>
       </Link>
     </Grid>

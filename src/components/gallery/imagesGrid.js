@@ -8,7 +8,7 @@ import DialogComponent from '../utils/dialog' ;
 import Message from '../utils/message' ;
 import UploadImage from '../specifics/imagesGrid/uploadImageDialog' ;
 import { sendMessage, removeMessage } from '../../store/actions/messageActions' ;
-
+import { getRequest } from '../../utils/http' ;
 
 const styles = {
   grid : {
@@ -28,9 +28,18 @@ class ImagesGrid extends Component {
     details : this.props.details ,
   }
 
-  componentDidMount = () => {
 
-    if (!this.state.data) {
+  // request data without updateing the search field in redux store
+  // in case i searched for some tags in home page
+  // then i went to details page i don't want to lose the original searched tags
+  requestDataLocally = () => {
+    getRequest(`images${this.props.search}`)
+    .then(resp => resp.json())
+    .then(data => this.setState({ data }))
+  }
+
+  componentDidMount = () => {
+    if (!this.state.data || this.props.details) {
 
       switch(this.props.type) {
         case 'liked' :
@@ -38,19 +47,22 @@ class ImagesGrid extends Component {
           break  ;
 
         case 'searched' :
+          // in details page update the local state
+          if (this.props.details) {
+            this.requestDataLocally() ;
+            return ;
+          }
+          // else update the glabal state 
           this.props.getData(`images${this.props.search}`,'GET_SEARCH')  ;
 
         default :
           this.props.getData('images','GET_ALL') ;
           break
       }
-
     }
   }
-  static getDerivedStateFromProps = (nextProps,prevState) => {
-    console.log( nextProps.search ) ;
-    return nextProps ; 
-  }
+
+
   // control the upload modal
   handleUploadDialogClose = () => this.setState({ openUploadDialog : false })
 
@@ -65,13 +77,9 @@ class ImagesGrid extends Component {
 
 
   render = () => {
-    let type = 'all' ;
-
-    if (this.props.type) {
-      type = this.props.type
-    }
-
-    const data  = this.props[type] ;
+    const type = this.props.type ? this.props.type : 'all' ;
+    const data = this.state.data ? this.state.data : this.props[type] ;
+    //console.log(data)  ;
 
     return (
       <Grid container spacing = {8} style= {styles.grid} className = 'imgs-grid-container'>
