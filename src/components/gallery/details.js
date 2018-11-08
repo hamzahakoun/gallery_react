@@ -154,7 +154,7 @@ class Details extends Component {
                       <div style = {{height : '30px'}}></div>
                       <Like item = {this.state.data} />
                       <div style = {{height : '20px'}}></div>
-                      <TagsList tags = {this.state.data.tags} />
+                      <TagsList tags = {this.state.data.tags} history = {this.props.history}/>
                     </Grid>
 
                     <Grid item xs = {12} sm = {4}>
