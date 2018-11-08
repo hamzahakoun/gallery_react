@@ -12,7 +12,7 @@ export default class TagsList extends Component {
     return nextProps ;
   }
 
-  handleTagItemClick = (content) => {this.props.history.push(`?tags=${content}`)}
+  handleTagItemClick = (content) => {this.props.history.push(`/?tags=${content}`)}
 
   render = () => {
 
