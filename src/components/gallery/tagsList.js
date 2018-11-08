@@ -12,10 +12,10 @@ export default class TagsList extends Component {
     return nextProps ;
   }
 
-  handleTagItemClick = (content) => {this.props.history.push(`/?tags=${content}`)}
+  handleTagItemClick = (content) => {this.props.history.push(`?tags=${content}`)}
 
   render = () => {
-  
+
     return (
       <div style = {{display : 'flex' ,height :'70px',overflowX : 'scroll',wrapDirection : 'row' }}>
           {this.state.tags.map(item => {

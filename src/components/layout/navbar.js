@@ -76,7 +76,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     clear : () => dispatch(clearAll()) ,
     clearData : (type) => dispatch(clearData(type)) ,
-    logout :  () => dispatch(logout())
+    logout :  () => dispatch(logout()),
   }
 }
 

@@ -31,13 +31,14 @@ class ImagesGrid extends Component {
   // request data without updateing the search field in redux store
   // in case i searched for some tags in home page
   // then i went to details page i don't want to lose the original searched tags
-  requestDataLocally = () => {
-    getRequest(`images${this.props.search}`)
+  requestDataLocally = (excludeId) => {
+    getRequest(`images${this.props.search}&exclude=${excludeId}`)
     .then(resp => resp.json())
     .then(data => this.setState({ data }))
   }
 
   componentDidMount = () => {
+
     if (!this.state.data || this.props.details) {
 
       switch(this.props.type) {
@@ -48,13 +49,13 @@ class ImagesGrid extends Component {
         case 'searched' :
           // in details page update the local state
           if (this.props.details) {
-            this.requestDataLocally() ;
+            this.requestDataLocally(this.props.details.id) ;
             return ;
           }
           // else update the glabal state
           this.props.getData(`images${this.props.search}`,'GET_SEARCH')  ;
           break ;
-          
+
         default :
           this.props.getData('images','GET_ALL') ;
           break
@@ -63,7 +64,9 @@ class ImagesGrid extends Component {
   }
 
   // i need this to show messages in case user deleted image
-  static getDerivedStateFromProps = (nextProsp,prevState) => nextProsp ;
+  static getDerivedStateFromProps = (nextProsp,prevState) => {
+    return nextProsp ;
+  }
 
   // control the upload modal
   handleUploadDialogClose = () => this.setState({ openUploadDialog : false })
