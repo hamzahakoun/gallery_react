@@ -65,7 +65,7 @@ class Login extends Component {
 
 
     return (
-      <div className = 'login-container'>
+      <div className = 'login-container animated bounceInUp'>
         <div className = ' login-form'>
           <Grid container spacing = {32}>
           <Grid item xs = {false} sm = {4}></Grid>

@@ -122,7 +122,7 @@ class TagCards extends Component {
               Object.keys(this.state.readyTags).map(letter => {
                 const span = setSpan(this.state.readyTags[letter].length)
                 return (
-                  <Card key = {letter} style = {{ gridRowEnd : `span ${span}`}}>
+                  <Card key = {letter} style = {{ gridRowEnd : `span ${span}`}} className = 'animated bounceIn'>
                     <CardContent>
                       <Typography color="textSecondary" gutterBottom style = {{backgroundColor : '#3f51b5',color : '#ffffff',padding : '10px'}}>
                          {letter.toUpperCase()}
