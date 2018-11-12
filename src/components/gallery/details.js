@@ -78,13 +78,14 @@ class Details extends Component {
 
 
   static getDerivedStateFromProps = (nextProps,prevState) =>  {
-
     if (nextProps.id !== prevState.id) {
       nextProps.getData(`images${nextProps.id}`,'GET_DETAILS') ;
       return { ...nextProps,commentsHeight : 0}
-    }
 
+    }
     return nextProps ;
+
+
   }
   // when loading this page get all details of this instance
   getData = (id) => this.props.getData(`images${id}/`,'GET_DETAILS') ;

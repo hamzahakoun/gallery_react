@@ -1,9 +1,9 @@
 const initState = {
-    all : null, // all images
-    liked : null, // liked images
-    searched : null, //searched on images
+    all : [], // all images
+    liked : [], // liked images
+    searched : [], //searched on images
     details : null, // current details item
-    tags : null, // all tags
+    tags : [], // all tags
     checkedTags : [], // checked tags
   }
 
@@ -27,7 +27,7 @@ const galleryReducer = (state = initState, action) => {
 
 
     case 'CLEAR' : // clear all data (all,likedl,searched,details)
-      return {all : null ,liked : null,searched : null,details :null,tags : null,checkedTags : []}
+      return {all : [] ,liked : [],searched : [],details :null,tags : [],checkedTags : []}
 
     case 'CHECK_TAGS' :// check certain tags / all tags
       return {...state , checkedTags : [...state.checkedTags ,...action.data]}
@@ -36,25 +36,33 @@ const galleryReducer = (state = initState, action) => {
       return {...state , checkedTags : []}
 
     case 'CLEAR_SEARCHED' : // clear searched imagess
-      return {...state,searched : null }
+      return {...state,searched : [] }
 
     case 'CLEAR_DETAILS' : // clear details related to details page ;
       return {...state,details : null }
 
     case 'CLEAR_LIKED' : // clear details related to details page ;
-      return {...state,liked : null }
+      return {...state,liked : [] }
 
     case 'CLEAR_ALL' : // clear details related to details page ;
-      return {...state,all : null }
+      return {...state,all : [] }
 
     case 'APPEND_LIKED' : //append one item to data
-      return {...state,liked : [...state.liked,action.data] }
+
+      // if liked images is not requested yet
+      // then don't append this image
+      // cuz if i do then images grid will not issue a new request to get
+      // all the liked images cuz it already has one 
+      if (state.liked.length) {
+        return {...state,liked : [...state.liked,action.data] }
+      }
+      return state ;
 
     case 'APPEND_ALL' : //append one item to data
       return {...state,all : [...state.all,action.data] }
 
     case 'CLEAER_TAGS' :
-      return {...state,tags : null }
+      return {...state,tags : [] }
 
     case 'POP_LIKED' : // remove one item from data
       const newLiked = state.liked.filter(item => item.id !== action.data.id) ;

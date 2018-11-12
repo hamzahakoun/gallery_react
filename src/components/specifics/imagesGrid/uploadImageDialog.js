@@ -27,13 +27,14 @@ class UploadImage extends Component {
 
   // select image to upload
   handleSelectedFile = (e) => {
-    this.setState({
-      selectedFile : e.target.files[0],
-      selectFileName : e.target.files[0].name ,
-      imgSrc : window.URL.createObjectURL(e.target.files[0]),
-      value : e.target.files[0].value ,
-    })
-
+    if (e.target.files[0]) {
+      this.setState({
+        selectedFile : e.target.files[0],
+        selectFileName : e.target.files[0].name ,
+        imgSrc : window.URL.createObjectURL(e.target.files[0]),
+        value : e.target.files[0].value ,
+      })
+    }
   }
 
   // when this component first mount there will be no tags

@@ -38,9 +38,7 @@ class ImagesGrid extends Component {
   }
 
   componentDidMount = () => {
-
-    if (!this.state.data || this.props.details) {
-
+    if (!this.state.data.length || this.props.details) {
       switch(this.props.type) {
         case 'liked' :
           this.props.getData('images?liked=1','GET_LIKED') ;
@@ -86,8 +84,19 @@ class ImagesGrid extends Component {
 
   render = () => {
     const type = this.props.type ? this.props.type : 'all' ;
-    const data = this.state.data ? this.state.data : this.props[type] ;
-    //console.log(data)  ;
+    let data ;
+
+    // when in details page state will be update locally so search will be
+    // related to the details page only and not to the globla store
+    // thuz data will be the searched images only
+    // but i want the data to be updated in case the type is equal to liked 
+    if (this.state.data && this.props.type !== 'liked') {
+      data = this.state.data ;
+    } else {
+      data = this.props[type] ;
+    }
+
+    //const data = this.state.data ? this.state.data : this.props[type] ;
 
     return (
       <Grid container spacing = {8} style= {styles.grid} className = 'imgs-grid-container'>
@@ -95,7 +104,6 @@ class ImagesGrid extends Component {
           data.map(item => <ImagesGridItem  item = {item} key = {item.id}/>)
         }
         {!data && <CircularProgress className = 'loading' color = 'secondary' />}
-        {data && data.length === 0 && <h3 className = 'loading'>No data to be displayed</h3>}
         <Button onClick = {() => this.setState({openUploadDialog : true})} variant="fab" color="secondary" aria-label="Add" style = {{position : 'fixed',right : '5%',bottom : '7%'}}>
           <AddIcon />
         </Button>

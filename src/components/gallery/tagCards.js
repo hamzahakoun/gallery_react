@@ -98,7 +98,7 @@ class TagCards extends Component {
 
 
   componentDidMount = () => {
-    if (!this.state.tags) {
+    if (!this.state.tags.length) {
       this.props.getTags() ;
     }
   }

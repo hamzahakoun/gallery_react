@@ -37,7 +37,7 @@ class Like extends Component {
 
     const action = this.state.isLiked ? this.dislike : this.like ;
     return (
-      <div style = {{display : 'flex',alignItems : 'center'}}>
+      <div className = 'like' style = {{display : 'flex',alignItems : 'center'}}>
         <span><Favorite onClick = { action } style = {{color : this.state.color}}/></span>
         <span style = {{color : this.state.color}}>
             {this.state.likesNum > 0 && this.state.likesNum }
